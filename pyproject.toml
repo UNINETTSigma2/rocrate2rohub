@@ -1,0 +1,25 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "rocrate2rohub"
+authors = [{name = "Hanne Moa", email = "hanne.moa@sikt.no"}]
+license = {file = "LICENSE"}
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Science/Research",
+    "Operating System :: POSIX",
+    "Topic :: System :: Archiving :: Packaging",
+    "Topic :: System :: Archiving",
+]
+dynamic = ["version", "description"]
+dependencies = ["rocrate"]
+
+[project.urls]
+Home = "https://github.com/hmpf/rocrate2rohub"
+
+[project.scripts]
+rocrate2rohub = "rocrate2rohub.cli:main"
