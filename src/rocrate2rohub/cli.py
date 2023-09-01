@@ -2,6 +2,7 @@ import argparse
 import sys
 
 from .rocrate2rohub import CrateConverter
+from .utils import convert_jsonld_to_crate
 
 
 SCRIPT_NAME = 'rocrate2rohub'
@@ -47,6 +48,24 @@ def make_argparser():
     return parser
 
 
+def get_converter(filename):
+    if filename.endswith('.json'):
+        crate = CrateConverter()
+        rocrate = convert_jsonld_to_crate(output)
+        crate.crate = rocrate
+        return crate
+    return CrateConverter(filename)
+
+
+def dump_crate(crate, filename):
+    if filename.endswith('.json'):
+        crate.write_jsonld(filename)
+    elif filename.endswith('.zip'):
+        crate.write_zipfile(filename)
+    else:
+        crate.write_directory(filename)
+
+
 def main(args=None):
     if args is None:
         parser = make_argparser()
@@ -59,7 +78,7 @@ def main(args=None):
         raise SystemExit
 
     if args.action == 'check':
-        crate = CrateConverter(args.crate)
+        crate = get_converter(args.crate)
         validation_errors = crate.validate()
         if args.verbose:
             if validation_errors:
@@ -77,17 +96,13 @@ def main(args=None):
 
     if args.action == 'fix':
         output = args.output or args.crate
-        crate = CrateConverter(args.crate)
-        for argname in CrateConverter.CHECKLIST:
+        crate = get_converter(args.crate)
+        for argname in crate.CHECKLIST:
             arg = getattr(args, argname, None)
             if arg:
                 set_arg = getattr(crate, f'set_{argname}', lambda x: x)
                 set_arg(arg)
-        if output:
-            if output.endswith('.zip'):
-                crate.write_zipfile(output)
-            else:
-                crate.write_directory(output)
+        dump_crate(crate, output)
         raise SystemExit
 
     parser.print_usage(sys.stderr)

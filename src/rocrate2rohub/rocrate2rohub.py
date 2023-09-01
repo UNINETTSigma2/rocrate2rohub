@@ -3,6 +3,8 @@ import importlib.resources as import_resources
 from rocrate.rocrate import ROCrate
 import rohub
 
+from .utils import convert_crate_to_jsonld
+
 
 ROHUB_NAME_MINLENGTH = 5
 RESEARCH_AREA_FILE = 'research_areas.tsv'
@@ -38,14 +40,21 @@ class CrateConverter:
         return tuple(sorted(errors))
 
     def write_directory(self, filename):
-        if filename.endswith('.zip'):
-            raise ConversionError("Will not write to a directory ending with \".zip\"")
+        if '.' in filename:
+            raise ConversionError("Will not write to a directory containing the letter \".\"")
         self.crate.write(filename)
 
     def write_zipfile(self, filename):
         if not filename.endswith('.zip'):
             raise ConversionError("Will not write a zip to a filename not ending with \".zip\"")
         self.crate.write_zip(filename)
+
+    def write_jsonld(self, filename):
+        if not filename.endswith('.json'):
+            raise ConversionError("Will not write json-ld to a filename not ending with \".json\"")
+        text = convert_crate_to_jsonld(self.crate)
+        with open(filename, 'w') as F:
+            F.write(text)
 
     def check_name(self):
         name = self.crate.root_dataset._jsonld.get('name')

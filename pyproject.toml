@@ -16,7 +16,11 @@ classifiers = [
     "Topic :: System :: Archiving",
 ]
 dynamic = ["version", "description"]
-dependencies = ["rocrate"]
+dependencies = [
+    "rocrate",
+    "rdflib>=6.0.0",
+]
+requires-python = ">=3.9"
 
 [project.urls]
 Home = "https://github.com/hmpf/rocrate2rohub"
