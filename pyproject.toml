@@ -23,7 +23,7 @@ dependencies = [
 requires-python = ">=3.9"
 
 [project.urls]
-Home = "https://github.com/hmpf/rocrate2rohub"
+Home = "https://github.com/UNINETTSigma2/rocrate2rohub"
 
 [project.scripts]
 rocrate2rohub = "rocrate2rohub.cli:main"
